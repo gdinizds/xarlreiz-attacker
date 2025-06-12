@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Xarlreiz-Attacker
+
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tryItOutEnabled: true
+
+
