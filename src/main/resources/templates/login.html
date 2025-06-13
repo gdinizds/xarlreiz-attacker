@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Xarlreiz Attacker 2.0</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('/images/cesar.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: white;
+        }
+
+        /* Overlay escurecido */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ddd;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login - Xarlreiz Attacker 2.0</h2>
+
+    <form th:action="@{/login}" method="post">
+        <div>
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Entrar</button>
+        </div>
+    </form>
+
+    <div th:if="${param.error}" class="error">
+        Usuário ou senha inválidos.
+    </div>
+</div>
+
+</body>
+</html>
