@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class PacketFloodController {
             @ApiResponse(responseCode = "200", description = "Ataque iniciado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos ou ataque já em andamento")
     })
-    @PostMapping("/start")
+    @PostMapping(value = "/start" , consumes = "application/json")
     public ResponseEntity<String> startAttack(@Valid @RequestBody AttackRequest request) {
         try {
             Protocol protocol = Protocol.fromString(request.getProtocol());
@@ -47,7 +48,7 @@ public class PacketFloodController {
             description = "Para o ataque em andamento"
     )
     @ApiResponse(responseCode = "200", description = "Ataque parado com sucesso")
-    @PostMapping("/stop")
+    @PostMapping(value = "/stop")
     public ResponseEntity<String> stopAttack() {
         attackOrchestrator.stopAttack();
         return ResponseEntity.ok("Attack stopped");
@@ -58,7 +59,7 @@ public class PacketFloodController {
             description = "Retorna o status atual do ataque"
     )
     @ApiResponse(responseCode = "200", description = "Status obtido com sucesso")
-    @GetMapping("/status")
+    @GetMapping(value = "/status", produces = "application/json")
     public ResponseEntity<AttackStatus> getStatus() {
         return ResponseEntity.ok(attackOrchestrator.getStatus());
     }

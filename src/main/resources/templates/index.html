@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xarlreiz Attacker 2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('/images/cesar.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .backdrop {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+<div id="app" class="backdrop p-8 rounded-2xl shadow-xl max-w-xl w-full">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">🚀 Xarlreiz Attacker 2.0</h1>
+
+    <div class="grid gap-4 mb-4">
+        <input v-model="ip" placeholder="Target IP" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required>
+        <input v-model="port" type="number" placeholder="Port" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required>
+        <select v-model="protocol" class="border border-gray-300 rounded-lg px-4 py-2 w-full">
+            <option value="UDP">UDP</option>
+            <option value="TCP">TCP</option>
+        </select>
+        <button @click="start" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg">Start Attack</button>
+        <button @click="stop" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg">Stop Attack</button>
+    </div>
+
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg border text-sm text-gray-700">
+        <p><strong>Status:</strong>
+            <span :class="running ? 'text-green-600' : 'text-red-600'">
+          {{ running ? 'Running' : 'Stopped' }}
+        </span>
+        </p>
+        <p><strong>UDP Packets Sent:</strong> {{ udpSent }}</p>
+        <p><strong>TCP Packets Sent:</strong> {{ tcpSent }}</p>
+    </div>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                ip: '',
+                port: 80,
+                protocol: 'UDP',
+                running: false,
+                udpSent: 0,
+                tcpSent: 0
+            };
+        },
+        methods: {
+            start() {
+                axios.post('/attack/start', {
+                    target: this.ip,
+                    port: this.port,
+                    protocol: this.protocol
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(() => this.refresh());
+            },
+            stop() {
+                axios.post('/attack/stop').then(() => this.refresh());
+            },
+            refresh() {
+                axios.get('/attack/status').then(res => {
+                    this.running = res.data.running;
+                    this.udpSent = res.data.udpPacketsSent;
+                    this.tcpSent = res.data.tcpPacketsSent;
+                });
+            }
+        },
+        mounted() {
+            this.refresh();
+            setInterval(this.refresh, 2000);
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
